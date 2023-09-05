@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - develop
     paths:
       - 'Dockerfile'
       - 'src/**'
@@ -31,4 +30,4 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        docker buildx build --push -t ${{ env.REGISTRY }}:${{ env.BRANCH }}-${{ env.HASH }} .
+        docker buildx build --push -t ${{ env.REGISTRY }}:latest .
