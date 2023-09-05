@@ -1,0 +1,23 @@
+version: '3.9'
+services:
+    python-boilerplate:
+        image: python-boilerplate:${TAG:-latest}
+        container_name: python-boilerplate
+        restart: always
+        environment:
+            - DB_USERNAME
+            - DB_PASSWORD
+            - DB_HOSTNAME
+            - DB_DATABASE
+        networks:
+            - main
+        ports:
+          - "8000:8000"
+        logging:
+            driver: "json-file"
+            options:
+                max-size: "10m"
+                max-file: "5"
+
+networks:
+    main:

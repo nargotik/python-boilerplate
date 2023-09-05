@@ -1,0 +1,10 @@
+Flask
+Flask-RESTx
+SQLAlchemy
+mysql.connector
+pymysql
+numpy
+pandas
+gunicorn
+psutil
+cachetools
