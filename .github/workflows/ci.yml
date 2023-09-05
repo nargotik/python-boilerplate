@@ -7,6 +7,9 @@ on:
       - develop
     paths:
       - 'Dockerfile'
+      - 'src/**'
+      - 'VERSION'
+      - 'entrypoint.sh'
 
 jobs:
   build:
