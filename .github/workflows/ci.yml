@@ -10,6 +10,11 @@ on:
       - 'src/**'
       - 'VERSION'
       - 'entrypoint.sh'
+env:
+  BRANCH: ${{ github.ref_name }}
+  HASH: ${{ github.sha }}
+  REGISTRY: ghcr.io/${{ github.repository }}
+  SNAME: ${{ github.repository }}
 
 jobs:
   build:
@@ -20,22 +25,19 @@ jobs:
       docker:
         image: docker:dind
         options: --privileged
-    env:
-      DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
-      DOCKER_REGISTRY_PASS: ${{ secrets.DOCKER_REGISTRY_PASS }}
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
     - name: Install Dependencies
-      run: |
-        apk add --update bash coreutils tar make git
+      run: apk add --update bash coreutils tar make git
 
-    - name: Login to Docker Registry
-      run: echo "$DOCKER_REGISTRY_PASS" | docker login ${{ secrets.DOCKER_REGISTRY }} --username $DOCKER_REGISTRY_USER --password-stdin
+    - name: Login to GitHub Container Registry
+      run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login ghcr.io -u ${{ github.actor }} --password-stdin
 
     - name: Set up Docker Buildx
       run: docker buildx create --name mybuilder --use --bootstrap
 
-    - name: Make buildx
-      run: make buildx
+    - name: Build and Push Docker image
+      run: |
+        docker buildx build --push -t ${{ env.REGISTRY }}/my-image:${{ env.BRANCH }}-${{ env.HASH }} .
