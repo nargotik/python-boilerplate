@@ -1,4 +1,4 @@
-# My RESTful API Boilerplate
+# RESTful API Boilerplate
 
 ## Author
 [Daniel](https://github.com/nargotik)
