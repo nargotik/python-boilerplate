@@ -40,4 +40,4 @@ jobs:
 
     - name: Build and Push Docker image
       run: |
-        docker buildx build --push -t ${{ env.REGISTRY }}/my-image:${{ env.BRANCH }}-${{ env.HASH }} .
+        docker buildx build --push -t ${{ env.REGISTRY }}:${{ env.BRANCH }}-${{ env.HASH }} .
