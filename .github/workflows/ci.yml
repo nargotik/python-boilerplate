@@ -1,0 +1,38 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+      - develop
+    paths:
+      - 'Dockerfile'
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: jdrouet/docker-with-buildx:stable
+    services:
+      docker:
+        image: docker:dind
+        options: --privileged
+    env:
+      DOCKER_REGISTRY_USER: ${{ secrets.DOCKER_REGISTRY_USER }}
+      DOCKER_REGISTRY_PASS: ${{ secrets.DOCKER_REGISTRY_PASS }}
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies
+      run: |
+        apk add --update bash coreutils tar make git
+
+    - name: Login to Docker Registry
+      run: echo "$DOCKER_REGISTRY_PASS" | docker login ${{ secrets.DOCKER_REGISTRY }} --username $DOCKER_REGISTRY_USER --password-stdin
+
+    - name: Set up Docker Buildx
+      run: docker buildx create --name mybuilder --use --bootstrap
+
+    - name: Make buildx
+      run: make buildx
